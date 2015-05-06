@@ -10,6 +10,7 @@ namespace Zinc
     {
         static void Main(string[] args)
         {
+
         }
     }
 }

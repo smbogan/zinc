@@ -41,12 +41,27 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AST\CharacterClasses.cs" />
+    <Compile Include="AST\Lexer.cs" />
+    <Compile Include="AST\LexerOption.cs" />
+    <Compile Include="AST\LexerOptions.cs" />
+    <Compile Include="AST\LexerState.cs" />
+    <Compile Include="AST\StreamWindow.cs" />
+    <Compile Include="AST\TokenStream.cs" />
+    <Compile Include="AST\TokenType.cs" />
+    <Compile Include="Compiler\ZincCompiler.cs" />
+    <Compile Include="AST\Token.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Working.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="sample.txt" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

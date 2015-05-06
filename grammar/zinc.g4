@@ -1,0 +1,5 @@
+grammar zinc;
+
+root
+    :   
+    ;
