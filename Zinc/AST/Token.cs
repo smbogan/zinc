@@ -11,15 +11,15 @@ namespace Zinc.AST
     {
         public TokenType LexerTokenType { get; private set; }
 
-        public ulong Start { get; private set; }
+        public int Start { get; private set; }
 
-        public ulong End { get; private set; }
+        public int End { get; private set; }
 
-        public ulong Line { get; private set; }
+        public int Line { get; private set; }
 
-        public ulong Offset { get; private set; }
+        public int Offset { get; private set; }
 
-        public ulong Length
+        public int Length
         {
             get
             {
@@ -29,11 +29,20 @@ namespace Zinc.AST
 
         public Stream Source { get; private set; }
 
-        public Token(TokenType type, ulong start, ulong end, ulong line, ulong offset, Stream stream)
+        public Token(TokenType type, int start, int end, int line, int offset, Stream stream)
         {
             LexerTokenType = type;
             Start = start;
             End = end;
+            Offset = offset;
+            Line = line;
+            Source = stream;
+        }
+
+        public Token(TokenType type, StreamWindow window, int length)
+            : this(type, window.Position, window.Position + length, window.Line, window.Offset, window.UnderlyingStream)
+        {
+            window.Accept(length);
         }
     }
 }

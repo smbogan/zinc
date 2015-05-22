@@ -20,5 +20,7 @@ namespace Zinc.AST
         IntegerLiteral,
         FloatLiteral,
 
+        //Keywords
+
     }
 }

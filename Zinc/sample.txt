@@ -1,1 +1,53 @@
 ﻿
+using System.Collections.Generic;
+
+public class Sound(string sound)
+{
+   public string Audio { get; private set; } = sound;
+}
+
+public interface Animal
+{
+   string Species { get; }
+
+   Sound Call();
+}
+
+public class Cat : Animal
+{
+   public property string Species
+   {
+      string species;
+      get
+	  {
+	     return species;
+	  }
+
+	  private set
+	  {
+	     species = value;
+	  }
+   } = ""
+
+   public Sound Call()
+   {
+      return new Sound("Meow");
+   }
+}
+
+
+
+==========================================================
+
+//long form:
+a : function(int, int, int) = {int|a, b|
+  
+};
+
+//short form:
+a : {int|a:int, b:int|  
+  return a + b;
+};
+
+//lazy evaluation:
+a : 

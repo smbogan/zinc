@@ -9,26 +9,30 @@ namespace Zinc.AST
 {
     public class Lexer
     {
-        TokenStream Tokens { get; private set; }
+        public TokenStream Tokens { get; private set; }
 
-        LexerState State { get; private set; }
+        private LexerState State { get; set; }
 
-        public Dictionary<LexerState, LexerOptions> StateTable = new Dictionary<LexerState, LexerOptions>()
-        {
-            {LexerState.Start, 
-                new LexerOptions(
-                    new LexerOption()
-                    )}
-        };
+        private Dictionary<LexerState, LexerOptions> StateTable;
 
         public Lexer()
         {
             Tokens = new TokenStream();
+
+            //Setup state table
+            StateTable = new Dictionary<LexerState, LexerOptions>()
+            {
+                {LexerState.Start, 
+                    new LexerOptions(
+                        new LexerOption(IsWhitespace, ConsumeWhitespace),
+                        new LexerOption(IsIdentifier, ConsumeIdentifier)
+                        )}
+            };
         }
 
         public void Lex(Stream s, Encoding encoding)
         {
-            StreamWindow window = new StreamWindow(new StreamReader(s, encoding, false, 16384, true));
+            StreamWindow window = new StreamWindow(s, encoding);
 
             while(State != LexerState.End && State != LexerState.Error)
             {
@@ -36,7 +40,7 @@ namespace Zinc.AST
             }
         }
 
-        public bool IsWhitespace(StreamWindow window)
+        private bool IsWhitespace(StreamWindow window)
         {
             char c;
             if(window.Peek(0, out c))
@@ -49,6 +53,43 @@ namespace Zinc.AST
             }
 
             return false;
+        }
+
+        private void ConsumeWhitespace(StreamWindow window)
+        {
+            int whitespaceLength = window.CountWhile(CharacterClasses.IsWhitespace);
+
+            if (whitespaceLength > 0)
+            {
+                Token token = new Token(TokenType.WS, window, whitespaceLength);
+                Tokens.Add(token);
+            }
+        }
+
+        private bool IsIdentifier(StreamWindow window)
+        {
+            char c;
+            if (window.Peek(0, out c))
+            {
+                return CharacterClasses.IsIdentifier(c);
+            }
+            else
+            {
+                State = LexerState.End;
+            }
+
+            return false;
+        }
+
+        private void ConsumeIdentifier(StreamWindow window)
+        {
+            int identifierLength = window.CountWhile(CharacterClasses.IsIdentifier);
+
+            if (identifierLength > 0)
+            {
+                Token token = new Token(TokenType.Identifier, window, identifierLength);
+                Tokens.Add(token);
+            }
         }
     }
 }

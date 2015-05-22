@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{A33C2357-A1AE-4DD9-8B52-754AF4030F55}</ProjectGuid>
+    <ProjectGuid>{C81BB646-013F-44F2-BAA1-0D532D6687CA}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Zinc</RootNamespace>
-    <AssemblyName>Zinc</AssemblyName>
+    <RootNamespace>ZincTest</RootNamespace>
+    <AssemblyName>ZincTest</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -41,45 +41,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AST\CharacterClasses.cs" />
-    <Compile Include="AST\Lexer.cs" />
-    <Compile Include="AST\LexerOption.cs" />
-    <Compile Include="AST\LexerOptions.cs" />
-    <Compile Include="AST\LexerState.cs" />
-    <Compile Include="AST\StreamWindow.cs" />
-    <Compile Include="AST\TokenStream.cs" />
-    <Compile Include="AST\TokenType.cs" />
-    <Compile Include="AST\Token.cs" />
-    <Compile Include="Expressions\AddExpression.cs" />
-    <Compile Include="Expressions\Assembly.cs" />
-    <Compile Include="Expressions\AssignmentExpression.cs" />
-    <Compile Include="Expressions\BinaryExpression.cs" />
-    <Compile Include="Expressions\Call.cs" />
-    <Compile Include="Expressions\Class.cs" />
-    <Compile Include="Expressions\DivideExpression.cs" />
-    <Compile Include="Expressions\Expression.cs" />
-    <Compile Include="Expressions\AssignableExpression.cs" />
-    <Compile Include="Expressions\IExpressionVisitor.cs" />
-    <Compile Include="Expressions\LocalVariable.cs" />
-    <Compile Include="Expressions\Method.cs" />
-    <Compile Include="Expressions\ModExpression.cs" />
-    <Compile Include="Expressions\MultiplyExpression.cs" />
-    <Compile Include="Expressions\Namespace.cs" />
-    <Compile Include="Expressions\SubtractExpression.cs" />
-    <Compile Include="Expressions\TypeParameters.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utility\ReadOnlyList.cs" />
-    <Compile Include="Working.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="sample.txt" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Compiler\" />
+    <ProjectReference Include="..\Zinc\Zinc.csproj">
+      <Project>{a33c2357-a1ae-4dd9-8b52-754af4030f55}</Project>
+      <Name>Zinc</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

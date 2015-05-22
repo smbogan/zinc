@@ -7,33 +7,41 @@ using System.IO;
 
 namespace Zinc.AST
 {
-    public class StreamWindow : IDisposable
+    public class StreamWindow
     {
-        public ulong Position { get; private set; }
+        public int Position { get; private set; }
 
-        public ulong Line { get; private set; }
+        public int Line { get; private set; }
 
-        public ulong Offset { get; private set; }
+        public int Offset { get; private set; }
+
+        public TextReader Reader { get; private set; }
+
+        public Stream UnderlyingStream { get; private set; }
+
+        public Encoding ReaderEncoding { get; private set; }
 
         char[] buffer;
         int bufferPosition;
         int bufferCount;
 
-        TextReader reader;
         List<char> temp;
 
-        public StreamWindow(TextReader reader)
+        public StreamWindow(Stream stream, Encoding encoding)
         {
-            this.reader = reader;
+            this.ReaderEncoding = encoding;
+            this.UnderlyingStream = stream;
+            this.Reader = new StreamReader(stream, encoding, false, 16384, true);
             temp = new List<char>();
             buffer = new char[16384];
             Line = 1;
             Offset = 0;
+            
         }
 
         private bool LoadIntoBuffer()
         {
-            bufferCount = reader.Read(buffer, 0, buffer.Length);
+            bufferCount = Reader.Read(buffer, 0, buffer.Length);
             bufferPosition = 0;
 
             return bufferCount > 0;
@@ -74,6 +82,25 @@ namespace Zinc.AST
 
                 return Peek(p, out value);
             }
+        }
+
+        public int CountWhile(Predicate<char> test)
+        {
+            int i = -1;
+
+            char c;
+
+            do
+            {
+                i++;
+
+                if(!Peek(i, out c))
+                {
+                    return i;
+                }
+            } while (test(c));
+
+            return i;
         }
 
         public void Accept(int count)
