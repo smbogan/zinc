@@ -14,11 +14,10 @@ namespace Zinc.AST
         StringDoubleQuotesLiteral,
         StringSingleQuotesLiteral,
         Identifier,
-        BinaryOperator,
-        UnaryOperator,
         ArrayLiteral,
         IntegerLiteral,
         FloatLiteral,
+        Operator,
 
         //Keywords
 

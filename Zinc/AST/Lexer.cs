@@ -25,10 +25,14 @@ namespace Zinc.AST
                 {LexerState.Start, 
                     new LexerOptions(
                         new LexerOption(IsWhitespace, ConsumeWhitespace),
-                        new LexerOption(IsIdentifier, ConsumeIdentifier)
+                        new LexerOption(IsIdentifier, ConsumeIdentifier),
+                        new LexerOption(IsOperator, ConsumeOperator),
+                        new LexerOption(IsEndOfStream, NullOperation)
                         )}
             };
         }
+
+
 
         public void Lex(Stream s, Encoding encoding)
         {
@@ -91,5 +95,53 @@ namespace Zinc.AST
                 Tokens.Add(token);
             }
         }
+
+        private void NullOperation(StreamWindow window)
+        {
+            //Do nothing
+        }
+
+        private bool IsEndOfStream(StreamWindow window)
+        {
+            char c;
+            if (window.Peek(0, out c))
+            {
+                return false;
+            }
+            else
+            {
+                State = LexerState.End;
+                return true;
+            }
+        }
+
+
+        private bool IsOperator(StreamWindow window)
+        {
+            char c;
+            if (window.Peek(0, out c))
+            {
+                return CharacterClasses.IsOperator(c);
+            }
+            else
+            {
+                State = LexerState.End;
+                return false;
+            }
+        }
+
+
+        private void ConsumeOperator(StreamWindow window)
+        {
+            int operatorLength = window.CountWhile(CharacterClasses.IsOperator);
+
+            if (operatorLength > 0)
+            {
+                Token token = new Token(TokenType.Operator, window, operatorLength);
+                Tokens.Add(token);
+            }
+        }
+
+
     }
 }

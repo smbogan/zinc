@@ -23,7 +23,7 @@ namespace Zinc.Expressions
         void Divide(Expression Left, Expression Right);
 
         void Mod(Expression Left, Expression Right);
-
+        void ForLoop(Expression initial, Expression final, Expression body);
         void StaticCall(StaticMethod Method, Utility.ReadOnlyList<Expression> Parameters);
 
         void Block(Utility.ReadOnlyList<Expression> Expressions);

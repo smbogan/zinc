@@ -49,7 +49,15 @@ namespace Zinc.AST
 
         private bool Load(int p)
         {
-            for(int j = 0; j < p; j++)
+            if(bufferCount == 0)
+            {
+                if (!LoadIntoBuffer())
+                {
+                    return false;
+                }
+            }
+
+            for(int j = temp.Count - 1; j < p; j++)
             {
                 if(bufferPosition >= bufferCount)
                 {
@@ -127,6 +135,8 @@ namespace Zinc.AST
                         break;
                 }
             }
+
+            Position += count;
 
             temp.RemoveRange(0, count);
         }
