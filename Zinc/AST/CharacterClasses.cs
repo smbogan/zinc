@@ -57,6 +57,18 @@ namespace Zinc.AST
             }
         }
 
+        public static bool IsNewLineCharacter(char c)
+        {
+            switch(c)
+            {
+                case '\r':
+                case '\n':
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         public static bool IsCommentStarter(char c)
         {
             switch(c)

@@ -111,6 +111,40 @@ namespace Zinc.AST
             return i;
         }
 
+        public int CountWhile(Func<char, char, bool> test)
+        {
+            int i = -1;
+
+            char c, d;
+
+            do
+            {
+                i++;
+
+                if (!Peek(i, out c))
+                {
+                    return i;
+                }
+
+                if(!Peek(i + 1, out d))
+                {
+                    return i + 1;
+                }
+            } while (test(c, d));
+
+            return i + 2;
+        }
+
+        public int CountWhileNot(Predicate<char> test)
+        {
+            return CountWhile((c) => !test(c));
+        }
+
+        public int CountWhileNot(Func<char, char, bool> test)
+        {
+            return CountWhile((c, d) => !test(c, d));
+        }
+
         public void Accept(int count)
         {
             if(temp.Count < count)

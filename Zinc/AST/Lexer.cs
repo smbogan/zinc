@@ -13,6 +13,10 @@ namespace Zinc.AST
 
         private LexerState State { get; set; }
 
+        public LexerError Error { get; private set; }
+
+        public int ErrorPosition { get; private set; }
+
         private Dictionary<LexerState, LexerOptions> StateTable;
 
         public Lexer()
@@ -24,6 +28,9 @@ namespace Zinc.AST
             {
                 {LexerState.Start, 
                     new LexerOptions(
+                        new LexerOption(IsBlockComment, ConsumeBlockComment),
+                        new LexerOption(IsHashComment, ConsumeHashComment),
+                        new LexerOption(IsLineComment, ConsumeLineComment),
                         new LexerOption(IsWhitespace, ConsumeWhitespace),
                         new LexerOption(IsIdentifier, ConsumeIdentifier),
                         new LexerOption(IsOperator, ConsumeOperator),
@@ -32,15 +39,84 @@ namespace Zinc.AST
             };
         }
 
-
-
-        public void Lex(Stream s, Encoding encoding)
+        private bool IsHashComment(StreamWindow window)
         {
-            StreamWindow window = new StreamWindow(s, encoding);
+            throw new NotImplementedException();
+        }
 
-            while(State != LexerState.End && State != LexerState.Error)
+        private void ConsumeHashComment(StreamWindow window)
+        {
+            throw new NotImplementedException();
+        }
+
+        private bool IsBlockComment(StreamWindow window)
+        {
+            char c, d;
+
+            bool notEndOfStream;
+
+            if ((notEndOfStream = window.Peek(0, out c)) && window.Peek(1, out d))
             {
-                StateTable[State].Do(window);
+                if (c == '/' && d == '*')
+                {
+                    return true;
+                }
+            }
+
+            if (!notEndOfStream)
+            {
+                State = LexerState.End;
+            }
+
+            return false;
+        }
+
+        private void ConsumeBlockComment(StreamWindow window)
+        {
+            int blockCommentLength = window.CountWhileNot((c, d) => c == '*' && d == '/');
+
+            if (blockCommentLength > 0)
+            {
+                Token token = new Token(TokenType.LineComment, window, blockCommentLength);
+                Tokens.Add(token);
+            }
+            else
+            {
+                State = LexerState.Error;
+                Error = LexerError.BlockCommentWithNoEnd;
+            }
+        }
+
+        private bool IsLineComment(StreamWindow window)
+        {
+            char c, d;
+
+            bool notEndOfStream;
+
+            if((notEndOfStream = window.Peek(0, out c)) && window.Peek(1, out d))
+            {
+                if(c == '/' && d == '/')
+                {
+                    return true;
+                }
+            }
+
+            if(!notEndOfStream)
+            {
+                State = LexerState.End;
+            }
+
+            return false;
+        }
+
+        private void ConsumeLineComment(StreamWindow window)
+        {
+            int lineCommentLength = window.CountWhileNot(CharacterClasses.IsNewLineCharacter);
+
+            if (lineCommentLength > 0)
+            {
+                Token token = new Token(TokenType.LineComment, window, lineCommentLength);
+                Tokens.Add(token);
             }
         }
 
@@ -142,6 +218,17 @@ namespace Zinc.AST
             }
         }
 
+        public void Lex(Stream s, Encoding encoding)
+        {
+            State = LexerState.Start;
+            Error = LexerError.None;
 
+            StreamWindow window = new StreamWindow(s, encoding);
+
+            while (State != LexerState.End && State != LexerState.Error)
+            {
+                StateTable[State].Do(window);
+            }
+        }
     }
 }

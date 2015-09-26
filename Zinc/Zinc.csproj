@@ -43,6 +43,7 @@
   <ItemGroup>
     <Compile Include="AST\CharacterClasses.cs" />
     <Compile Include="AST\Lexer.cs" />
+    <Compile Include="AST\LexerError.cs" />
     <Compile Include="AST\LexerOption.cs" />
     <Compile Include="AST\LexerOptions.cs" />
     <Compile Include="AST\LexerState.cs" />

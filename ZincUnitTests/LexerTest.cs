@@ -12,7 +12,10 @@ namespace ZincUnitTests
         public void TestMethod1()
         {
             string code = @"
-                variable = 55;
+                /* block comment
+                stuff here
+                end of comment */
+                variable = 55; //Comment
                 wallaby = 44;
                 zinc = variable + wallaby;
             ";
@@ -21,6 +24,7 @@ namespace ZincUnitTests
             {
                 Lexer lex = new Lexer();
                 lex.Lex(ms, System.Text.Encoding.Unicode);
+                String s = lex.Tokens[1].ToString();
             }
         }
     }
