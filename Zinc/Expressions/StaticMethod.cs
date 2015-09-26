@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace Zinc.Expressions
 {
-    public class Method
+    public class StaticMethod
     {
         public string Name { get; private set; }
         public Class Class { get; private set; }
         public TypeParameters Parameters { get; private set; }
         public Class ReturnType { get; private set; }
 
-        public Method(Class klass, string name, TypeParameters parameterTypes, Class returnType)
+        public StaticMethod(Class klass, string name, TypeParameters parameterTypes, Class returnType)
         {
             this.Name = name;
             this.Class = klass;

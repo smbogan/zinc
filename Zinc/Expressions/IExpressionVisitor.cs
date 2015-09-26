@@ -23,5 +23,9 @@ namespace Zinc.Expressions
         void Divide(Expression Left, Expression Right);
 
         void Mod(Expression Left, Expression Right);
+
+        void StaticCall(StaticMethod Method, Utility.ReadOnlyList<Expression> Parameters);
+
+        void Block(Utility.ReadOnlyList<Expression> Expressions);
     }
 }
