@@ -18,6 +18,9 @@ namespace Zinc.AST
         IntegerLiteral,
         FloatLiteral,
         Operator,
+        HashLineComment,
+        Integer,
+        Semicolon,
 
         //Keywords
 

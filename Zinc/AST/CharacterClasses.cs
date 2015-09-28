@@ -81,6 +81,11 @@ namespace Zinc.AST
             }
         }
 
+        public static bool IsDigit(char c)
+        {
+            return c >= '0' && c <= '9';
+        }
+
         public static bool IsIdentifier(char c)
         {
             return !IsWhitespace(c) && !IsOperator(c) && !IsCommentStarter(c) && !IsQuoteStarter(c);

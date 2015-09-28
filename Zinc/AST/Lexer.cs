@@ -28,6 +28,8 @@ namespace Zinc.AST
             {
                 {LexerState.Start, 
                     new LexerOptions(
+                        new LexerOption(IsNumber, ConsumeNumber),
+                        new LexerOption(IsSemicolon, ConsumeSemicolon),
                         new LexerOption(IsBlockComment, ConsumeBlockComment),
                         new LexerOption(IsHashComment, ConsumeHashComment),
                         new LexerOption(IsLineComment, ConsumeLineComment),
@@ -39,14 +41,89 @@ namespace Zinc.AST
             };
         }
 
+        private bool IsNumber(StreamWindow window)
+        {
+            char c;
+
+            if(window.Peek(0, out c))
+            {
+                if(CharacterClasses.IsDigit(c))
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                State = LexerState.End;
+            }
+
+            return false;
+        }
+
+        private void ConsumeNumber(StreamWindow window)
+        {
+            int count = window.CountWhile(CharacterClasses.IsDigit);
+
+            if (count > 0)
+            {
+                Token token = new Token(TokenType.Integer, window, count);
+                Tokens.Add(token);
+            }
+        }
+
+        private bool IsSemicolon(StreamWindow window)
+        {
+            char c;
+
+            if(window.Peek(0, out c))
+            {
+                if(c == ';')
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                State = LexerState.End;
+            }
+
+            return false;
+        }
+
+        private void ConsumeSemicolon(StreamWindow window)
+        {
+            Token token = new Token(TokenType.Semicolon, window, 1);
+            Tokens.Add(token);
+        }
+
         private bool IsHashComment(StreamWindow window)
         {
-            throw new NotImplementedException();
+            char c;
+
+            if(window.Peek(0, out c))
+            {
+                if(c == '#')
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                State = LexerState.End;
+            }
+
+            return false;
         }
 
         private void ConsumeHashComment(StreamWindow window)
         {
-            throw new NotImplementedException();
+            int lineCommentLength = window.CountWhileNot(CharacterClasses.IsNewLineCharacter);
+
+            if (lineCommentLength > 0)
+            {
+                Token token = new Token(TokenType.HashLineComment, window, lineCommentLength);
+                Tokens.Add(token);
+            }
         }
 
         private bool IsBlockComment(StreamWindow window)
