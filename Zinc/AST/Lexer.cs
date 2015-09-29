@@ -28,6 +28,7 @@ namespace Zinc.AST
             {
                 {LexerState.Start, 
                     new LexerOptions(
+                        new LexerOption(IsDoubleString, ConsumeDoubleString),
                         new LexerOption(IsNumber, ConsumeNumber),
                         new LexerOption(IsSemicolon, ConsumeSemicolon),
                         new LexerOption(IsBlockComment, ConsumeBlockComment),
@@ -39,6 +40,55 @@ namespace Zinc.AST
                         new LexerOption(IsEndOfStream, NullOperation)
                         )}
             };
+        }
+
+        private bool IsDoubleString(StreamWindow window)
+        {
+            char c;
+
+            if(window.Peek(0, out c))
+            {
+                if(c == '"')
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                State = LexerState.End;
+            }
+
+            return false;
+        }
+
+        private void ConsumeDoubleString(StreamWindow window)
+        {
+            bool preslash = false;
+            bool first = true;
+
+            int count = window.CountWhile((c) => {
+                if(first)
+                {
+                    first = false;  //Swallow the opening double quote
+                    return true;
+                }
+
+                if (c == '\\')
+                    preslash = !preslash;
+
+                if(c == '"' && preslash)
+                {
+                    preslash = false;
+                }
+                else if(c == '"' & !preslash)
+                {
+                    return false;
+                }
+
+                return true;
+            });
+
+            Tokens.Add(new Token(TokenType.StringDoubleQuotesLiteral, window, count + 1));
         }
 
         private bool IsNumber(StreamWindow window)

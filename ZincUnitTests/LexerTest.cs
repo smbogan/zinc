@@ -17,6 +17,7 @@ namespace ZincUnitTests
                 end of comment */
                 variable = 55; //Comment
                 wallaby = -44.0;
+                str = ""This is a\"" string"";
                 zinc = variable + wallaby;
             ";
 
